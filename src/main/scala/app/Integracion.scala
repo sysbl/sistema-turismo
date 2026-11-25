@@ -14,12 +14,13 @@ object Integracion {
       .drop(1)
       .map { linea =>
         val partes = linea.split(",")
-        Destino(partes(0).trim, partes(1).trim, partes(2).trim.toInt)
+        // partes(1) es el departamento: lo usan Python y la web, Scala no lo necesita
+        Destino(partes(0).trim, partes(2).trim, partes(3).trim.toInt)
       }
 
     val recomendados = DestinoService.recomendar(destinos, viajero)
     val nivel = ViajeroService.nivelPresupuesto(viajero)
-    val nombres = recomendados.map(destino => destino.nombre).mkString(",")
+    val nombres = recomendados.map(destino => destino.nombre_destino).mkString(",")
     println(s"RESULTADO|nivel=$nivel|destinos=$nombres")
   }
 }

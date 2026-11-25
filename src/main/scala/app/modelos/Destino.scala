@@ -1,3 +1,3 @@
 package app.modelos
 
-case class Destino(nombre: String, tipo: String, costo: Int)
+case class Destino(nombre_destino: String, tipo_interes: String, costo: Int)

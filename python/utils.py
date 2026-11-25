@@ -1,16 +1,16 @@
 TABLA = str.maketrans("áéíóúñ", "aeioun") # tabla que lo del primer texto se converte en el segundo
 
 
-def normalizar(nombre):
-    texto = nombre.strip().lower() # quita espacios y pasa a minuscula
+def normalizar(nombre_destino):
+    texto = nombre_destino.strip().lower() # quita espacios y pasa a minuscula
     texto = texto.translate(TABLA) # aplica la tabla quitando las tildes
     return texto.replace(" ", "_") # convierte los espacios en _
 
 
-def normalizar_lista(nombres):
+def normalizar_lista(nombres_destinos):
     resultado = []
-    for nombre in nombres:
-        resultado.append(normalizar(nombre)) # añado al final y llama a la funcion anterior
+    for nombre_destino in nombres_destinos:
+        resultado.append(normalizar(nombre_destino)) # añado al final y llama a la funcion anterior
     return resultado
 
 

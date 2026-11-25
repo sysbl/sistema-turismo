@@ -4,7 +4,7 @@ Proyecto del curso **Lenguajes de Programación** (UTP), desarrollado con **Scal
 
 El sistema recomienda destinos turísticos del Perú según el **presupuesto** y el **interés** de cada viajero.
 
-- **Avance 1:** módulos de Scala (programación funcional) y Prolog (programación lógica), ejecutados de forma independiente.
+- **Avance 1:** módulos de Scala (programación funcional) y Prolog (programación lógica). El programa independiente de Scala (`Main.scala`) ya no está en el proyecto; se conserva en el tag `avance2` de Git.
 - **Avance 2:** integración con Python, que pide los datos, llama a Scala y a Prolog y compara sus resultados.
 
 ## Estructura del proyecto
@@ -15,9 +15,9 @@ sistema-turismo/
 │   ├── main.py             (menú y flujo principal)
 │   ├── utils.py            (validación de datos y comparación de resultados)
 │   ├── scala_service.py    (ejecuta Scala y lee su respuesta)
-│   └── prolog_service.py   (ejecuta Prolog y lee su respuesta)
+│   ├── prolog_service.py   (ejecuta Prolog y lee su respuesta)
+│   └── servidor.py         (servidor Flask de la página web)
 ├── src/main/scala/app/
-│   ├── Main.scala          (Avance 1: ejecución independiente)
 │   ├── Integracion.scala   (Avance 2: punto de entrada para Python)
 │   ├── modelos/
 │   │   ├── Destino.scala
@@ -26,13 +26,12 @@ sistema-turismo/
 │       ├── DestinoService.scala
 │       └── ViajeroService.scala
 ├── prolog/
-│   ├── hechos.pl           (destinos, presupuestos, intereses, niveles)
-│   ├── reglas.pl           (puede_pagar, recomendar)
-│   ├── consultas.pl        (Avance 1: consultas de ejemplo)
+│   ├── hechos.pl           (destinos con costo, departamentos)
+│   ├── reglas.pl           (puede_pagar, recomendar, cercano, sugerido_cerca)
 │   └── integracion.pl      (Avance 2: carga hechos y reglas para Python)
 ├── data/
-│   ├── destinos.txt        (lo lee Integracion.scala)
-│   └── viajeros.txt        (viajeros de prueba del Avance 1)
+│   └── destinos.txt        (lo leen Integracion.scala, main.py y la web)
+├── web/                    (página para turistas: index.html, css, js, img)
 ├── build.sbt
 ├── project/build.properties
 └── README.md
@@ -42,9 +41,9 @@ sistema-turismo/
 
 1. `main.py` pide nombre, presupuesto e interés, y valida los datos.
 2. Python ejecuta Scala con esos datos como argumentos (`sbt -batch "runMain app.Integracion ..."`). Scala imprime una línea `RESULTADO|nivel=...|destinos=...`.
-3. Python lee esa línea y obtiene el **nivel de presupuesto** y los destinos recomendados por Scala.
-4. Python ejecuta Prolog (`swipl`) pasándole el nivel y el interés. Prolog imprime sus destinos recomendados.
-5. Python normaliza ambas listas y muestra si **Scala y Prolog coinciden**.
+3. Python lee esa línea y obtiene el nivel de presupuesto (solo como etiqueta) y los destinos recomendados por Scala.
+4. Python ejecuta Prolog (`swipl`) pasándole el presupuesto y el interés. Prolog imprime sus destinos recomendados y, además, **destinos cercanos** (del mismo departamento, de cualquier interés) que el viajero también puede pagar.
+5. Python normaliza ambas listas y muestra si **Scala y Prolog coinciden**. Los cercanos se muestran bajo cada destino recomendado.
 
 Solo Python da órdenes: Scala y Prolog no se comunican entre sí, y todo el intercambio se hace con texto.
 
@@ -78,43 +77,28 @@ Menú:
 
 La opción 1 pide nombre, presupuesto e interés. Cada consulta tarda unos segundos porque sbt arranca en cada llamada.
 
-### Solo Scala (Avance 1)
-
-Desde la carpeta raíz del proyecto:
+### Página web
 
 ```
-sbt "runMain app.Main"
+pip install flask
+python python\servidor.py
 ```
 
-También se puede ejecutar `app.Main` con el botón Run de IntelliJ.
-
-### Solo Prolog (Avance 1)
-
-1. Abrir `prolog/consultas.pl` con SWI-Prolog (doble clic). Este archivo carga `hechos.pl` y `reglas.pl`.
-2. Escribir consultas en la consola, por ejemplo:
-
-```prolog
-?- recomendar(ana, D).
-?- recomendar(carla, D).
-?- puede_pagar(luis, cusco).
-?- mostrar_recomendaciones(diego).
-```
-
-Si se modifica algún archivo `.pl`, recargar con `make.`
+Abrir `http://localhost:5000/`. Cada búsqueda tarda unos segundos porque sbt arranca en cada llamada. Con `?tecnico=1` al final de la dirección se ve el detalle de Scala y Prolog, y `sistema.html` explica el funcionamiento.
 
 ## Resultados esperados
 
 | Viajero | Presupuesto | Interés | Nivel | Recomendación |
 |---|---|---|---|---|
-| Ana | 900 | historia | medio | Cusco, Arequipa |
-| Luis | 450 | historia | bajo | Arequipa |
-| Carla | 1500 | playa | alto | Máncora, Paracas |
-| Diego | 600 | aventura | medio | Huaraz |
-| Sofía | 1300 | naturaleza | alto | Iquitos |
+| Ana | 900 | historia | medio | Centro historico, Valle Sagrado |
+| Luis | 450 | historia | bajo | Centro historico |
+| Carla | 1500 | playa | alto | Paracas, Mancora |
+| Diego | 600 | aventura | medio | Misti, Montana de Siete Colores, Huaraz |
+| Sofía | 1300 | naturaleza | alto | Colca, Parque Huascaran, Iquitos |
 
 ## Nota sobre ambos módulos
 
-Scala compara **montos** (costo del destino frente al presupuesto), mientras que Prolog compara **niveles** (bajo, medio, alto). Los datos se eligieron para que ambos módulos produzcan las mismas recomendaciones.
+Scala y Prolog usan el **mismo criterio**: el costo exacto del destino debe ser menor o igual al presupuesto. Los costos viven en `data/destinos.txt` y en `prolog/hechos.pl`, y deben ser iguales. Los niveles (bajo, medio, alto) solo se usan como etiqueta del presupuesto.
 
 ## Trabajo pendiente (Proyecto Final)
 

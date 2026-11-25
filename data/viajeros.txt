@@ -1,6 +1,0 @@
-nombre,presupuesto,interes
-Ana,900,historia
-Luis,450,historia
-Carla,1500,playa
-Diego,600,aventura
-Sofia,1300,naturaleza

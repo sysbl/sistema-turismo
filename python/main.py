@@ -1,6 +1,45 @@
 from scala_service import ejecutar_scala, RAIZ
 from prolog_service import ejecutar_prolog
-from utils import pedir_nombre, pedir_entero, pedir_interes, coinciden
+from utils import pedir_nombre, pedir_entero, pedir_interes, coinciden, normalizar
+
+
+def leer_destinos():
+    """Lee data/destinos.txt y devuelve una lista de diccionarios."""
+    ruta = RAIZ / "data" / "destinos.txt"
+    lineas = ruta.read_text(encoding="utf-8").splitlines()
+    destinos = []
+    for linea in lineas[1:]:  # la primera linea es el encabezado
+        if linea.strip():
+            nombre_destino, departamento, tipo_interes, costo = linea.split(",")
+            destinos.append({
+                "nombre_destino": nombre_destino.strip(),
+                "departamento": departamento.strip(),
+                "tipo_interes": tipo_interes.strip(),
+                "costo": int(costo.strip()),
+            })
+    return destinos
+
+
+def recomendar(nombre, presupuesto, interes):
+    """Calcula la recomendacion y la DEVUELVE (sin input ni print).
+    Sirve igual para la consola y para la web."""
+    nivel, destinos_scala = ejecutar_scala(nombre, presupuesto, interes)
+    destinos_prolog, sugerencias = ejecutar_prolog(presupuesto, interes)
+
+    # Prolog usa nombres como centro_historico; se pasan al nombre normal para mostrarlos
+    nombres = {normalizar(d["nombre_destino"]): d["nombre_destino"] for d in leer_destinos()}
+    cercanos = {}
+    for origen, cercano in sugerencias:
+        lugares = cercanos.setdefault(nombres.get(origen, origen), [])
+        lugares.append(nombres.get(cercano, cercano))
+
+    return {
+        "nivel": nivel,
+        "scala": destinos_scala,
+        "prolog": destinos_prolog,
+        "coinciden": coinciden(destinos_scala, destinos_prolog),
+        "cercanos": cercanos,
+    }
 
 
 def consultar():
@@ -11,27 +50,23 @@ def consultar():
     print()
     print(f"[Python] Datos: {nombre}, {presupuesto}, {interes}")
 
-    nivel, destinos_scala = ejecutar_scala(nombre, presupuesto, interes)
-    print(f"[Scala]  Nivel: {nivel} | Recomendados: {', '.join(destinos_scala) or 'ninguno'}")
+    resultado = recomendar(nombre, presupuesto, interes)
+    print(f"[Scala]  Nivel: {resultado['nivel']} | Recomendados: {', '.join(resultado['scala']) or 'ninguno'}")
+    print(f"[Prolog] Recomendados: {', '.join(resultado['prolog']) or 'ninguno'}")
+    for origen, lugares in resultado["cercanos"].items():
+        print(f"[Prolog] Cerca de {origen}: {', '.join(lugares)}")
 
-    destinos_prolog = ejecutar_prolog(nivel, interes)
-    print(f"[Prolog] Recomendados: {', '.join(destinos_prolog) or 'ninguno'}")
-
-    if coinciden(destinos_scala, destinos_prolog):
+    if resultado["coinciden"]:
         print("[Python] Scala y Prolog coinciden")
     else:
         print("[Python] Scala y Prolog NO coinciden")
 
 
 def listar_destinos():
-    ruta = RAIZ / "data" / "destinos.txt"
-    lineas = ruta.read_text(encoding="utf-8").splitlines()
     print()
-    print(f"{'Destino':<15}{'Tipo':<14}{'Costo (S/)':>10}")
-    for linea in lineas[1:]:
-        if linea.strip():
-            nombre, tipo, costo = linea.split(",")
-            print(f"{nombre.strip():<15}{tipo.strip():<14}{costo.strip():>10}")
+    print(f"{'Destino':<26}{'Departamento':<14}{'Tipo':<14}{'Costo (S/)':>10}")
+    for d in leer_destinos():
+        print(f"{d['nombre_destino']:<26}{d['departamento']:<14}{d['tipo_interes']:<14}{d['costo']:>10}")
 
 
 def main():

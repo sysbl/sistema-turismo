@@ -58,3 +58,12 @@ __pycache__/
 
 ### Datos secretos (token del bot de Telegram, mas adelante) ###
 .env
+
+### Archivos locales que no se suben ###
+CLAUDE.md
+.claude/
+imagenes/
+
+### Entornos virtuales de Python ###
+.venv/
+venv/

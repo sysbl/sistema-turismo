@@ -1,9 +1,14 @@
-nombre,tipo,costo
-Cusco,historia,800
-Arequipa,historia,450
-Machu Picchu,historia,1300
-Mancora,playa,600
-Paracas,playa,400
-Lima,gastronomia,500
-Huaraz,aventura,550
-Iquitos,naturaleza,1200
+nombre_destino,departamento,tipo_interes,costo
+Centro historico,Arequipa,historia,450
+Misti,Arequipa,aventura,480
+Colca,Arequipa,naturaleza,650
+Valle Sagrado,Cusco,historia,750
+Machu Picchu,Cusco,historia,1300
+Montana de Siete Colores,Cusco,aventura,600
+Paracas,Ica,playa,400
+Bodegas de Ica,Ica,gastronomia,380
+Mancora,Piura,playa,1100
+Barranco y Miraflores,Lima,gastronomia,500
+Huaraz,Ancash,aventura,550
+Parque Huascaran,Ancash,naturaleza,600
+Iquitos,Loreto,naturaleza,1200

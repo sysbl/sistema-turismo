@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rumbo Perú · Recomendador de destinos</title>
+  <meta name="description" content="Dime tu presupuesto y lo que te gusta, y te muestro los lugares del Perú que mejor encajan contigo.">
+  <meta name="theme-color" content="#1f4a3d">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%231b3d33%27/%3E%3Cpath d=%27M5 25l8-13 4 6 3-4 7 11z%27 fill=%27%23e9b44c%27/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <a class="saltar" href="#buscador">Ir al buscador</a>
+
+  <header class="barra">
+    <a class="marca" href="#inicio" aria-label="Rumbo Perú, inicio">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5 13.5 13.5 8.5 15.5 10.5 10.5z"/></svg>
+      <span>Rumbo Perú</span>
+    </a>
+    <nav class="menu" aria-label="Secciones">
+      <a href="#buscador">Buscar</a>
+      <a href="#catalogo">Destinos</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="inicio">
+      <div class="hero-contenido">
+        <p class="sobretitulo">Recomendador de viajes · Perú</p>
+        <h1>Tu presupuesto, tu interés,<br><em>tu próximo rumbo.</em></h1>
+        <p class="hero-texto">Cuéntanos cuánto quieres gastar y qué te gusta. Te mostramos los lugares del Perú que mejor encajan con tu presupuesto y con el tipo de viaje que sueñas.</p>
+        <a class="boton boton-claro" href="#buscador">Encuentra tu destino</a>
+      </div>
+      <svg class="hero-montes" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 200V120L130 70 240 130 390 40 530 140 650 80 810 160 940 50 1090 150 1210 100 1340 150 1440 110V200Z"/>
+      </svg>
+    </section>
+
+    <!-- BUSCADOR -->
+    <section class="buscador" id="buscador" aria-labelledby="t-buscador">
+      <form id="form" class="tarjeta-form" novalidate>
+        <h2 id="t-buscador">Arma tu viaje</h2>
+        <p class="ayuda-general">Tres datos y listo. Tus resultados aparecen en unos segundos.</p>
+
+        <div class="campo">
+          <label for="nombre">¿Cómo te llamas?</label>
+          <input id="nombre" name="nombre" type="text" autocomplete="given-name" maxlength="20" aria-describedby="err-nombre" required>
+          <p class="error-campo" id="err-nombre" role="alert"></p>
+        </div>
+
+        <div class="campo">
+          <div class="fila-presupuesto">
+            <label for="presupuesto">¿Cuánto quieres gastar?</label>
+            <output class="monto" for="presupuesto" id="monto">S/ 800</output>
+          </div>
+          <input id="presupuesto" name="presupuesto" type="range" min="300" max="1500" step="50" value="800" aria-describedby="nivel-texto">
+          <div class="escala" aria-hidden="true">
+            <span>S/ 300</span>
+            <span>S/ 1500</span>
+          </div>
+          <div class="niveles" aria-hidden="true">
+            <span class="n-bajo" style="--x:8.33%">Económico</span><span class="n-medio" style="--x:37.5%">Moderado</span><span class="n-alto" style="--x:79.17%">Premium</span>
+          </div>
+          <p class="nivel-texto" id="nivel-texto">Presupuesto <strong>moderado</strong></p>
+        </div>
+
+        <fieldset class="campo intereses" aria-describedby="err-interes">
+          <legend>¿Qué te mueve?</legend>
+          <div class="chips" id="chips-interes"></div>
+          <p class="error-campo" id="err-interes" role="alert"></p>
+        </fieldset>
+
+        <button class="boton boton-principal" type="submit" id="enviar">Buscar destinos</button>
+      </form>
+    </section>
+
+    <!-- RESULTADOS -->
+    <section class="resultados" id="resultados" aria-live="polite" aria-labelledby="t-resultados" tabindex="-1" hidden>
+      <div class="contenedor" id="resultados-contenido"></div>
+    </section>
+
+    <!-- CATÁLOGO -->
+    <section class="catalogo" id="catalogo" aria-labelledby="t-catalogo">
+      <div class="contenedor">
+        <p class="sobretitulo oscuro">Catálogo</p>
+        <h2 id="t-catalogo">Lugares para descubrir</h2>
+        <p class="lead">Estos son los lugares que puedes encontrar, con su costo estimado por persona. Filtra por lo que más te guste.</p>
+        <div class="filtros" id="filtros" role="group" aria-label="Filtrar por interés"></div>
+        <p class="conteo" id="conteo" aria-live="polite"></p>
+        <div class="rejilla" id="rejilla"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="contenedor">
+      <p>Rumbo Perú · Recomendaciones de viaje por el Perú.</p>
+      <p class="pie-chico">Los costos son estimados por persona para un viaje corto y pueden variar según la temporada. Fotos: ver <a href="img/CREDITOS.md">créditos</a>.</p>
+      <p class="pie-chico" id="pie-tecnico" hidden><a href="sistema.html">Cómo funciona el sistema (modo presentación)</a></p>
+    </div>
+  </footer>
+
+  <dialog id="ficha" class="ficha" aria-labelledby="ficha-titulo">
+    <button type="button" class="ficha-cerrar" id="ficha-cerrar" aria-label="Cerrar">&times;</button>
+    <div id="ficha-cuerpo"></div>
+  </dialog>
+
+  <noscript><p class="sin-js">Esta página necesita JavaScript para consultar el sistema.</p></noscript>
+  <script src="js/app.js"></script>
+</body>
+</html>

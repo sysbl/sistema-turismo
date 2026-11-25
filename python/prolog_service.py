@@ -5,11 +5,11 @@ from utils import INTERESES
 
 RAIZ = Path(__file__).resolve().parents[1]
 
-NIVELES = ("bajo", "medio", "alto")
-
-def ejecutar_prolog(nivel, interes):
-    if nivel not in NIVELES:
-        raise ValueError(f"Nivel no valido: {nivel}")
+def ejecutar_prolog(presupuesto, interes):
+    """Devuelve (destinos recomendados, sugerencias cercanas).
+    Las sugerencias son pares (destino recomendado, destino cercano)."""
+    if not isinstance(presupuesto, int) or presupuesto <= 0:
+        raise ValueError(f"Presupuesto no valido: {presupuesto}")
     if interes not in INTERESES:
         raise ValueError(f"Interes no valido: {interes}")
 
@@ -18,11 +18,14 @@ def ejecutar_prolog(nivel, interes):
         raise RuntimeError("No se encontro swipl en el PATH")
 
     meta = (
-        f"assertz(presupuesto(usuario,{nivel})),"
+        f"assertz(presupuesto(usuario,{presupuesto})),"
         f"assertz(interes(usuario,{interes})),"
         "findall(D,recomendar(usuario,D),L),"
         "atomic_list_concat(L,',',T),"
-        "write(T)"
+        "write(T),nl,"
+        "findall(X,(sugerido_cerca(usuario,A,B),atomic_list_concat([A,B],':',X)),C),"
+        "atomic_list_concat(C,',',U),"
+        "write(U)"
     )
 
     comando = [swipl, "-q", "-s", "prolog/integracion.pl", "-g", meta, "-t", "halt"]
@@ -39,5 +42,8 @@ def ejecutar_prolog(nivel, interes):
     if resultado.returncode != 0:
         raise RuntimeError(f"Prolog fallo: {resultado.stderr.strip()}")
 
-    texto = resultado.stdout.strip()
-    return texto.split(",") if texto else []
+    # Linea 1: destinos recomendados. Linea 2: sugerencias "recomendado:cercano".
+    lineas = resultado.stdout.splitlines() + ["", ""]
+    destinos = lineas[0].strip().split(",") if lineas[0].strip() else []
+    sugerencias = [par.split(":") for par in lineas[1].strip().split(",") if par]
+    return destinos, sugerencias

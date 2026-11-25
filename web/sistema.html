@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Cómo funciona el sistema · Rumbo Perú</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%277%27 fill=%27%231b3d33%27/%3E%3Cpath d=%27M5 25l8-13 4 6 3-4 7 11z%27 fill=%27%23e9b44c%27/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+  <header class="barra">
+    <a class="marca" href="index.html" aria-label="Volver a Rumbo Perú">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M15.5 8.5 13.5 13.5 8.5 15.5 10.5 10.5z"/></svg>
+      <span>Rumbo Perú</span>
+    </a>
+    <nav class="menu" aria-label="Secciones"><a href="index.html">Volver a la página</a></nav>
+  </header>
+  <main>
+    <section class="como sistema" id="como-funciona" aria-labelledby="t-como">
+      <div class="contenedor">
+        <p class="sobretitulo">Para la presentación</p>
+        <h2 id="t-como">Cómo funciona</h2>
+        <p class="lead">Esta página explica el funcionamiento técnico del proyecto y no se enlaza desde la página pública. Para ver el detalle de cada búsqueda en la página principal, agrega <code>?tecnico=1</code> a la dirección.</p>
+        <p class="lead">Solo Python da órdenes. Scala y Prolog nunca se hablan entre sí: cada uno recibe un texto, trabaja y devuelve otro texto.</p>
+
+        <ol class="pasos">
+          <li class="paso">
+            <span class="paso-num">1</span>
+            <h3>Python recibe</h3>
+            <p>Valida tu nombre, tu presupuesto y tu interés, y se los pasa a los otros dos.</p>
+            <code>python/main.py</code>
+          </li>
+          <li class="paso">
+            <span class="paso-num">2</span>
+            <h3>Scala calcula</h3>
+            <p>Compara tu monto exacto con el costo de cada destino y devuelve el nivel de presupuesto y los destinos que alcanzan.</p>
+            <code>RESULTADO|nivel=medio|…</code>
+          </li>
+          <li class="paso">
+            <span class="paso-num">3</span>
+            <h3>Prolog razona</h3>
+            <p>Recibe tu monto y tu interés, aplica sus reglas sobre hechos para encontrar destinos y, además, sugiere lugares cercanos del mismo departamento.</p>
+            <code>centro_historico,valle_sagrado</code>
+          </li>
+          <li class="paso paso-final">
+            <span class="paso-num">4</span>
+            <h3>Python compara</h3>
+            <p>Normaliza los dos resultados (sin tildes ni mayúsculas) y revisa si tienen los mismos destinos.</p>
+            <code>coinciden: true</code>
+          </li>
+        </ol>
+
+        <p class="nota-limite"><strong>Un mismo criterio:</strong> Scala y Prolog comparan tu monto exacto con el costo de cada destino. Así, si las dos listas no coinciden, algo está mal en los datos y el sistema lo avisa.</p>
+      </div>
+    </section>
+  </main>
+  <footer class="pie">
+    <div class="contenedor">
+      <p>Proyecto del curso Lenguajes de Programación · UTP. Python, Scala y Prolog trabajando juntos.</p>
+    </div>
+  </footer>
+</body>
+</html>
