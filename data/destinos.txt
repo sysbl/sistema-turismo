@@ -1,0 +1,9 @@
+nombre,tipo,costo
+Cusco,historia,800
+Arequipa,historia,450
+Machu Picchu,historia,1300
+Mancora,playa,600
+Paracas,playa,400
+Lima,gastronomia,500
+Huaraz,aventura,550
+Iquitos,naturaleza,1200
